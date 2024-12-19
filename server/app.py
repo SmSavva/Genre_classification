@@ -3,7 +3,8 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for
 import pickle
 from feature_extraction import extract_features
 
-app = Flask(__name__)
+# app = Flask(__name__)
+app = Flask(name, template_folder='~/home/ubuntu/genre_clf/')
 
 # Constants
 UPLOAD_FOLDER = 'uploads'
@@ -15,9 +16,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Initialization
 def initialize_model():
-    with open('genre_clf/xgb_mgen.pkl', 'rb') as model_file:
+    with open('xgb_mgen.pkl', 'rb') as model_file:
         model = pickle.load(model_file)
-    with open('genre_clf/min_max_scaler.pkl', 'rb') as scaler_file:
+    with open('min_max_scaler.pkl', 'rb') as scaler_file:
         min_max_scaler = pickle.load(scaler_file)
     return model, min_max_scaler
 
@@ -32,7 +33,7 @@ def predict_genre(features):
 # Routes
 @app.route('/')
 def index():
-    return render_template('/index.html')
+    return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
