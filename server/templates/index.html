@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genre Classification</title>
+    <style>
+        #bg-wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .result-container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .upload-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+        .upload-btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .upload-btn:active {
+            transform: scale(0.95);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        #file-name {
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            color: #ddd;
+        }
+        #loading {
+            display: none;
+            color: #fff;
+            font-size: 18px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .result-animation {
+            animation: fadeIn 1s;
+        }
+        #audio-player {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+        #visualizer {
+    display: block;
+    margin: 0 auto;
+}
+    </style>
+</head>
+<body>
+    <div id="bg-wrap">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+            <defs>
+                <radialGradient id="Gradient1" cx="50%" cy="50%" fx="0.441602%" fy="50%" r=".5">
+                    <animate attributeName="fx" dur="34s" values="0%;3%;0%" repeatCount="indefinite"></animate>
+                    <stop offset="0%" stop-color="rgba(255, 0, 255, 1)"></stop>
+                    <stop offset="100%" stop-color="rgba(255, 0, 255, 0)"></stop>
+                </radialGradient>
+                <radialGradient id="Gradient2" cx="50%" cy="50%" fx="2.68147%" fy="50%" r=".5">
+                    <animate attributeName="fx" dur="23.5s" values="0%;3%;0%" repeatCount="indefinite"></animate>
+                    <stop offset="0%" stop-color="rgba(255, 255, 0, 1)"></stop>
+                    <stop offset="100%" stop-color="rgba(255, 255, 0, 0)"></stop>
+                </radialGradient>
+                <radialGradient id="Gradient3" cx="50%" cy="50%" fx="0.836536%" fy="50%" r=".5">
+                    <animate attributeName="fx" dur="21.5s" values="0%;3%;0%" repeatCount="indefinite"></animate>
+                    <stop offset="0%" stop-color="rgba(0, 255, 255, 1)"></stop>
+                    <stop offset="100%" stop-color="rgba(0, 255, 255, 0)"></stop>
+                </radialGradient>
+                <radialGradient id="Gradient4" cx="50%" cy="50%" fx="4.56417%" fy="50%" r=".5">
+                    <animate attributeName="fx" dur="23s" values="0%;5%;0%" repeatCount="indefinite"></animate>
+                    <stop offset="0%" stop-color="rgba(0, 255, 0, 1)"></stop>
+                    <stop offset="100%" stop-color="rgba(0, 255, 0, 0)"></stop>
+                </radialGradient>
+                <radialGradient id="Gradient5" cx="50%" cy="50%" fx="2.65405%" fy="50%" r=".5">
+                    <animate attributeName="fx" dur="24.5s" values="0%;5%;0%" repeatCount="indefinite"></animate>
+                    <stop offset="0%" stop-color="rgba(0,0,255, 1)"></stop>
+                    <stop offset="100%" stop-color="rgba(0,0,255, 0)"></stop>
+                </radialGradient>
+                <radialGradient id="Gradient6" cx="50%" cy="50%" fx="0.981338%" fy="50%" r=".5">
+                    <animate attributeName="fx" dur="25.5s" values="0%;5%;0%" repeatCount="indefinite"></animate>
+                    <stop offset="0%" stop-color="rgba(255,0,0, 1)"></stop>
+                    <stop offset="100%" stop-color="rgba(255,0,0, 0)"></stop>
+                </radialGradient>
+            </defs>
+            <rect x="13.744%" y="1.18473%" width="100%" height="100%" fill="url(#Gradient1)" transform="rotate(334.41 50 50)">
+                <animate attributeName="x" dur="20s" values="25%;0%;25%" repeatCount="indefinite"></animate>
+                <animate attributeName="y" dur="21s" values="0%;25%;0%" repeatCount="indefinite"></animate>
+                <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="7s" repeatCount="indefinite"></animateTransform>
+            </rect>
+            <rect x="-2.17916%" y="35.4267%" width="100%" height="100%" fill="url(#Gradient2)" transform="rotate(255.072 50 50)">
+                <animate attributeName="x" dur="23s" values="-25%;0%;-25%" repeatCount="indefinite"></animate>
+                <animate attributeName="y" dur="24s" values="0%;50%;0%" repeatCount="indefinite"></animate>
+                <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="12s" repeatCount="indefinite"></animateTransform>
+            </rect>
+            <rect x="9.00483%" y="14.5733%" width="100%" height="100%" fill="url(#Gradient3)" transform="rotate(139.903 50 50)">
+                <animate attributeName="x" dur="25s" values="0%;25%;0%" repeatCount="indefinite"></animate>
+                <animate attributeName="y" dur="12s" values="0%;25%;0%" repeatCount="indefinite"></animate>
+                <animateTransform attributeName="transform" type="rotate" from="360 50 50" to="0 50 50" dur="9s" repeatCount="indefinite"></animateTransform>
+            </rect>
+        </svg>
+    </div>
+    <div class="container">
+        <div class="result-container">
+            <h1>Upload an audio file to classify its genre</h1>
+            <p class="file-format">Supported file formats: MP3, WAV</p>
+            <form id="upload-form" action="/predict" method="post" enctype="multipart/form-data">
+                <label class="upload-btn" for="file-input">Choose File</label>
+                <input id="file-input" type="file" name="file" accept="audio/*">
+                <div id="file-name"></div>
+                <button class="upload-btn" type="submit">Upload</button>
+            </form>
+            <div id="loading">Loading...</div>
+            <audio id="audio-player" controls style="display:none;"></audio>
+            <canvas id="visualizer" width="600" height="200" style="display:none;"></canvas>
+            <p class="genre-info">
+            Track should match one of the following styles: Blues, Classical, Country, Pop, Disco, Hip-Hop, Jazz, Metal, Reggae, Rock.
+            If the uploaded track's style is not in the list above, the application will output the style most similar to the style of the track
+            based on its temporal and frequency characteristics.
+        </p>
+        </div>
+    </div>
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const audioPlayer = document.getElementById('audio-player');
+        const visualizer = document.getElementById('visualizer');
+        const canvasContext = visualizer.getContext('2d');
+        const fileNameDisplay = document.getElementById('file-name');
+        const form = document.getElementById('upload-form');
+        const loading = document.getElementById('loading');
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                fileNameDisplay.textContent = `Selected file: ${file.name}`;
+                const url = URL.createObjectURL(file);
+                audioPlayer.src = url;
+                audioPlayer.style.display = 'block';
+                visualizer.style.display = 'block';
+                visualizeAudio(url);
+            }
+        });
+
+        form.addEventListener('submit', function(event) {
+    const file = fileInput.files[0];
+    const validExtensions = ['mp3', 'wav'];
+    const fileExtension = file ? file.name.split('.').pop().toLowerCase() : '';
+
+    if (!file) {
+        event.preventDefault();
+        alert('No selected file');
+    } else if (!validExtensions.includes(fileExtension)) {
+        event.preventDefault();
+        alert('Invalid file format. Please select an mp3 or wav file.');
+    } else {
+        loading.style.display = 'block';
+    }
+});
+
+        function visualizeAudio(url) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const audioSrc = audioContext.createMediaElementSource(audioPlayer);
+            const analyser = audioContext.createAnalyser();
+            audioSrc.connect(analyser);
+            analyser.connect(audioContext.destination);
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function draw() {
+                requestAnimationFrame(draw);
+                analyser.getByteFrequencyData(dataArray);
+                canvasContext.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                canvasContext.fillRect(0, 0, visualizer.width, visualizer.height);
+                const barWidth = (visualizer.width / bufferLength) * 2.5;
+                let barHeight;
+                let x = 0;
+
+                for (let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i];
+                    canvasContext.fillStyle = `rgb(${barHeight+100},50,50)`;
+                    canvasContext.fillRect(x, visualizer.height-barHeight/2, barWidth, barHeight/2);
+                    x += barWidth + 1;
+                }
+            }
+            draw();
+        }
+    </script>
+</body>
+</html>
+
+
