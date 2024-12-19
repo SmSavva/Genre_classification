@@ -4,7 +4,7 @@ import pickle
 from feature_extraction import extract_features
 
 # app = Flask(__name__)
-app = Flask(name, template_folder='~/home/ubuntu/genre_clf/')
+app = Flask(__name__, template_folder='~/home/ubuntu/genre_clf/')
 
 # Constants
 UPLOAD_FOLDER = 'uploads'
