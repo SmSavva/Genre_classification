@@ -15,9 +15,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Initialization
 def initialize_model():
-    with open('xgb_mgen.pkl', 'rb') as model_file:
+    with open('genre_clf/xgb_mgen.pkl', 'rb') as model_file:
         model = pickle.load(model_file)
-    with open('min_max_scaler.pkl', 'rb') as scaler_file:
+    with open('genre_clf/min_max_scaler.pkl', 'rb') as scaler_file:
         min_max_scaler = pickle.load(scaler_file)
     return model, min_max_scaler
 
@@ -32,7 +32,7 @@ def predict_genre(features):
 # Routes
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('genre_clf/index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -57,7 +57,7 @@ def predict():
 @app.route('/result')
 def result():
     genre = request.args.get('genre', 'Unknown')
-    return render_template('result.html', genre=genre)
+    return render_template('genre_clf/result.html', genre=genre)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
